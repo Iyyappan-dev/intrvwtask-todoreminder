@@ -578,21 +578,22 @@ function fetch_todo()
 	}
 
 	today_date = dd + '/' + mm + '/' + yyyy;
-	
+	var query = {"validate_notification": "N"};
 	MongoClient.connect(url, function(err, db)
 	{
 		if (err) throw err;
 		var dbo = db.db("microservice_db");
-		dbo.collection("todo_list").find().toArray(function(err, result)
+		dbo.collection("todo_list").find(query).toArray(function(err, result)
 		{
 			if (err) throw err;
 			for(var i=0;i<result.length;i++)
 			{
-				if(result[i].validate_notification == "N")
+				if(result[i].schedule_date == today_date)
 				{
 					var user_id = result[i].user_id;
 					var task_id = result[i].task_id;
-					if(result[i].schedule_date == today_date)
+					console.log(i);
+					if(result[i].validate_notification == "N")
 					{
 						console.log('*********************');
 						var mailOptions={
@@ -614,8 +615,8 @@ function fetch_todo()
 								MongoClient.connect(url, function(err, db) {
 									if (err) throw err;
 									var dbo = db.db("microservice_db");
-									console.log(user_id);
-									console.log(task_id);
+									// console.log(user_id);
+									console.log(i);
 									var myquery = { user_id: user_id,task_id: task_id};
 									var newvalues = { $set: { validate_notification:'Y' } };
 									
@@ -630,6 +631,11 @@ function fetch_todo()
 							}
 						})
 					}
+				}
+				else
+				{
+					console.log('Not Today');
+					console.log(task_id);
 				}
 			}
 			db.close();
