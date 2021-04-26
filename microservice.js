@@ -190,26 +190,7 @@ function fetch_todo()
 				}
 				else
 				{
-					var mailOptions={
-						to : 'ayyappaniyyappan75@gmail.com',
-						from: 'no-reply@todo.com',
-						subject: 'Forgot Password',
-						html: 'Dear User,<br>Click the below link to reset the password<br><a href="http://localhost:3000/reset_password">Reset Password</a>',				
-					}
-					console.log(mailOptions);
-					transporter.sendMail(mailOptions, function(error, resp)
-					{
-						if(error)
-						{
-							console.log('Email error: ' + error);
-							res.sendStatus(500);
-						}
-						else
-						{
-							console.log("Email Success");
-							// res.sendStatus(200);
-						}
-					})
+					console.log('Not today');
 				}
 			}
 		}
