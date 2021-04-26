@@ -1,5 +1,8 @@
 function submit_form()
 {
+	var url = window.location.href;
+	var user_email = url.split('=');
+	
 	if($('#user_pwd').val().length>0)
 	{
 		if($('#user_pwd').val().trim()=='')
@@ -36,7 +39,7 @@ function submit_form()
 	{
 		$.post("http://localhost:3000/user/update_user_pwd",
 			{
-				user_id: sessionStorage.getItem('user_id'),
+				user_id: user_email[1],
 				user_password: $('#user_pwd').val()
 			},
 			function(data)

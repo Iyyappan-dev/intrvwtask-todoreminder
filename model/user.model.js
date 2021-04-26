@@ -3,19 +3,38 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const sgTransport = require('nodemailer-sendgrid-transport');
-const { base64encode, base64decode } = require('nodejs-base64');
+const algorithm = 'aes-256-cbc';
+const key = crypto.randomBytes(32);
+const iv = crypto.randomBytes(16);
 
-let encoded = base64encode('hey there'); // "aGV5ICB0aGVyZQ=="
-let decoded = base64decode(encoded); // "hey there"
+function encrypt(unencrypted_data)
+{
+	var encrypt_key = crypto.createCipher('aes-128-cbc', '@to-do++');
+	var encrypted_data = encrypt_key.update(unencrypted_data, 'utf8', 'hex')
+	encrypted_data += encrypt_key.final('hex');
+	//console.log(unencrypted_data + ' IS: ' + encrypted_data);
+	return encrypted_data;
+}
+
+function decrypt(encrypted_data)
+{
+	var decrypt_key = crypto.createDecipher('aes-128-cbc', '@to-do++');
+	var decrypted_data = decrypt_key.update(encrypted_data, 'hex', 'utf8')
+	decrypted_data += decrypt_key.final('utf8');
+	//console.log(encrypted_data + ' IS: ' + decrypted_data);
+	return decrypted_data;
+}
 
 /***************************Mail Notification Setup**********************************/
-var sgoptions = {
-    auth: {
-        api_key: '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'
-    }
-};
 
-var transporter = nodemailer.createTransport(sgTransport(sgoptions));
+var transporter = nodemailer.createTransport({
+ service: 'gmail',
+ auth: {
+        user: "ayyappaniyyappan75@gmail.com",
+        pass: "7871433886!"
+    }
+});
+
 
 /***************************JWT Token Generator**********************************/
 var TOKEN_SECRET = 'dhw782wujnd99ahmmakhanjkajikhiwn2n';
@@ -52,9 +71,10 @@ exports.signUp = async function (query, req, res) {
 				  user_password: String
 				});
 				
-				let encoded = base64encode(user_password);
+				let encrypt_password = encrypt(user_password);
+				
 				var signup = mongoose.model('login', signup_data, 'login_user');
-				var new_signup = new signup({ user_id: user_id, user_password: encoded });
+				var new_signup = new signup({ user_id: user_id, user_password: encrypt_password });
 				new_signup.save(function (err, book) {
 				  if (err) return console.error(err);
 				  res.sendStatus(200);
@@ -84,7 +104,8 @@ exports.login = async function (query, req, res) {
 		else{
 			if(result.length > 0)
 			{
-				user_password = base64encode(user_password);
+				result[0].user_password = decrypt(result[0].user_password);
+				console.log(result[0].user_password);
 				if(result[0].user_id == user_id)
 				{
 					if(result[0].user_password == user_password)
@@ -302,7 +323,7 @@ exports.verify_user = async function (query, req, res) {
 		else{
 			if(result.length > 0)
 			{
-				user_password = base64encode(user_password);
+				result[0].user_password = decrypt(result[0].user_password);
 				if(result[0].user_id == user_id)
 				{
 					if(result[0].user_password == user_password)
@@ -338,10 +359,10 @@ exports.update_pwd = async function (query, req, res) {
 	var Cat = mongoose.model('Cat', {
 		user_id: String,
 		user_password: String
-	}, 'todo_list');
+	}, 'login_user');
 	
-	let encoded = base64encode(user_password);
-	Cat.findOneAndUpdate({user_id: user_id}, {$set:{user_password:encoded}}, {new: true}, (err, doc) => {
+	let encrypt_password = encrypt(user_password);
+	Cat.findOneAndUpdate({user_id: user_id}, {$set:{user_password:encrypt_password}}, {new: true}, (err, doc) => {
 		if (err) {
 			console.log("Something wrong when updating data!");
 		}
@@ -358,9 +379,9 @@ exports.forgot_password = async function (query, req, res) {
 	
 	var mailOptions={
 		to : user_id,
-		from: 'no-reply@todo.com',
+		from: 'no-reply@gmail.com',
 		subject: 'Forgot Password',
-		html: 'Dear User,<br>Click the below link to reset the password<br><a href="http://localhost:3000/reset_password">Reset Password</a>',				
+		html: 'Dear User,<br>Click the below link to reset the password<br><a href="http://localhost:3000/reset_password?user_id='+ user_id +'">Reset Password</a>',				
 	}
 	console.log(mailOptions);
 	transporter.sendMail(mailOptions, function(error, resp)
@@ -377,21 +398,22 @@ exports.forgot_password = async function (query, req, res) {
 		}
 	})
 }
+
 /***************************Update email password API**********************************/
 exports.update_user_pwd = async function (query, req, res) {
 	var user_id=req.body.user_id;
 	var user_password=req.body.user_password;
-	
+	console.log(req.body);
 	mongoose.models = {}
 	var Cat = mongoose.model('Cat', {
 		user_id: String,
 		user_password: String
-	}, 'todo_list');
+	}, 'login_user');
 	
-	let encoded = base64encode(user_password);
-	Cat.findOneAndUpdate({user_id: user_id}, {$set:{user_password:encoded}}, {new: true}, (err, doc) => {
+	let encrypt_password = encrypt(user_password);
+	Cat.findOneAndUpdate({user_id: user_id}, {$set:{user_password:encrypt_password}}, {new: true}, (err, doc) => {
 		if (err) {
-			console.log("Something wrong when updating data!");
+			console.log(err);
 		}
 		else
 		{
