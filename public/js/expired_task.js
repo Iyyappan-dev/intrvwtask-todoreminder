@@ -23,7 +23,7 @@ function open_trash()
 
 function fetch_todo_data()
 {
-	$.post("http://localhost:3000/fetch_todo",
+	$.post("http://localhost:3000/user/fetch_todo",
 		{
 			user_id: user_id,
 			token: jwt
@@ -42,7 +42,7 @@ function fetch_todo_data()
 					// var expiry_date = new Date(data[i].expiry_date);
 					var expiry_date = data[i].expiry_date.split('/');
 					expiry_date = new Date(expiry_date[1]+'/'+expiry_date[0]+'/'+expiry_date[2]);
-					if(expiry_date <= today_date)
+					if(expiry_date <= today_date && data[i].task_status == 'Yet To Start')
 					{
 						block_name = block_name+'<tr><td>'+data[i].task_name+'</td><td>'+data[i].task_type+'</td><td>'+data[i].task_status+'</td><td>'+data[i].today_date+'</td><td>'+data[i].schedule_date+'</td><td>'+data[i].expiry_date+'</td></tr>';
 					}

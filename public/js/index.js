@@ -50,7 +50,7 @@ function submit_form()
 	
 	if($('#user_pwd').val() == $('#user_re_pwd').val())
 	{
-		$.post("http://localhost:3000/user_signup",
+		$.post("http://localhost:3000/user/signup",
 			{
 				user_id: $('#user_email').val(),
 				user_password: $('#user_pwd').val()

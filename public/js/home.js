@@ -23,7 +23,7 @@ function open_exp_task()
 
 function fetch_todo_data()
 {
-	$.post("http://localhost:3000/fetch_todo",
+	$.post("http://localhost:3000/user/fetch_todo",
 		{
 			user_id: user_id,
 			token: jwt
@@ -42,9 +42,16 @@ function fetch_todo_data()
 					// var expiry_date = new Date(data[i].expiry_date);
 					var expiry_date = data[i].expiry_date.split('/');
 					expiry_date = new Date(expiry_date[1]+'/'+expiry_date[0]+'/'+expiry_date[2]);
-					if(expiry_date >= today_date)
+					if(expiry_date >= today_date && data[i].trash_data == 'N')
 					{
 						block_name = block_name+'<tr><td>'+data[i].task_name+'</td><td>'+data[i].task_type+'</td><td>'+data[i].task_status+'</td><td>'+data[i].today_date+'</td><td>'+data[i].schedule_date+'</td><td>'+data[i].expiry_date+'</td><td><button type="submit" onclick="open_modal(\'' + data[i].task_id + '\');">Edit</button></td><td><button type="button" class="deletebtn" onclick="delete_task(\'' + data[i].task_id + '\');">Delete</button></td></tr>';
+					}
+					else
+					{
+						if(data[i].task_status == 'Completed' && data[i].trash_data == 'N')
+						{
+							block_name = block_name+'<tr><td>'+data[i].task_name+'</td><td>'+data[i].task_type+'</td><td>'+data[i].task_status+'</td><td>'+data[i].today_date+'</td><td>'+data[i].schedule_date+'</td><td>'+data[i].expiry_date+'</td><td><button type="submit" onclick="open_modal(\'' + data[i].task_id + '\');">Edit</button></td><td><button type="button" class="deletebtn" onclick="delete_task(\'' + data[i].task_id + '\');">Delete</button></td></tr>';
+						}
 					}
 				}
 				document.getElementById('display_todo').innerHTML = block_name;
@@ -73,7 +80,7 @@ function fetch_todo_data()
 
 function delete_task(task_id)
 {
-	$.post("http://localhost:3000/delete_todo",
+	$.post("http://localhost:3000/user/delete_todo",
 		{
 			user_id: user_id,
 			task_id: task_id,
@@ -191,7 +198,7 @@ function Update_todo()
 		return;
 	}
 	
-	$.post("http://localhost:3000/update_todo",
+	$.post("http://localhost:3000/user/update_todo",
 		{
 			user_id: user_id,
 			task_name: $('#task_name').val(),

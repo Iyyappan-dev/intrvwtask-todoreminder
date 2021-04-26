@@ -23,7 +23,7 @@ function open_exp_task()
 
 function fetch_trash_data()
 {
-	$.post("http://localhost:3000/fetch_trash_data",
+	$.post("http://localhost:3000/user/fetch_todo",
 		{
 			user_id: user_id,
 			token: jwt
@@ -37,7 +37,10 @@ function fetch_trash_data()
 				block_name = block_name + '<tr><th>Task Name</th><th>Task Type</th><th>Task Status</th><th>Creation Date</th><th>Schedule Date</th><th>Expiry Date</th><th>Restore</th></tr>';
 				for(var i=0;i<data.length;i++)
 				{
-					block_name = block_name+'<tr><td>'+data[i].task_name+'</td><td>'+data[i].task_type+'</td><td>'+data[i].task_status+'</td><td>'+data[i].today_date+'</td><td>'+data[i].schedule_date+'</td><td>'+data[i].expiry_date+'</td><td><button type="button" onclick="restore_task(\'' + data[i].task_id + '\');"><span class="glyphicon glyphicon-refresh"></span> Restore</button></td></tr>';
+					if(data[i].trash_data == 'Y')
+					{
+						block_name = block_name+'<tr><td>'+data[i].task_name+'</td><td>'+data[i].task_type+'</td><td>'+data[i].task_status+'</td><td>'+data[i].today_date+'</td><td>'+data[i].schedule_date+'</td><td>'+data[i].expiry_date+'</td><td><button type="button" onclick="restore_task(\'' + data[i].task_id + '\');"><span class="glyphicon glyphicon-refresh"></span> Restore</button></td></tr>';
+					}
 				}
 				document.getElementById('display_todo').innerHTML = block_name;
 			}
@@ -52,7 +55,7 @@ function fetch_trash_data()
 
 function restore_task(task_id)
 {
-	$.post("http://localhost:3000/restore_todo",
+	$.post("http://localhost:3000/user/restore_todo",
 		{
 			user_id: user_id,
 			task_id: task_id,

@@ -32,7 +32,7 @@ function login()
 		return;
 	}
 	
-	$.post("http://localhost:3000/user_login",
+	$.post("http://localhost:3000/user/login",
 		{
 			user_id: $('#user_email').val(),
 			user_password: $('#user_pwd').val()
@@ -42,7 +42,7 @@ function login()
 			sessionStorage.setItem('jwt',data);
 			sessionStorage.setItem('user_id',$('#user_email').val());
 			// console.log(data);
-			window.location = 'home.html';
+			window.location='http://localhost:3000/open_home?token=' + data;
 		}	
 	)
 	.fail(function (xhr)
@@ -87,12 +87,13 @@ function forgot_password()
 		return;
 	}
 	
-	$.post("http://localhost:3000/forgot_password",
+	$.post("http://localhost:3000/user/forgot_password",
 		{
 			user_id: $('#user_validate_email').val()
 		},
 		function(data)
 		{
+			sessionStorage.setItem('user_id',$('#user_validate_email').val());
 			alert("Password has been sent to your email id");
 		}	
 	)

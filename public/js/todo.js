@@ -87,7 +87,7 @@ function submit_todo()
 		return;
 	}
 	
-	$.post("http://localhost:3000/insert_todo",
+	$.post("http://localhost:3000/user/insert_todo",
 		{
 			user_id: user_id,
 			task_name: $('#task_name').val(),

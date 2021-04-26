@@ -39,7 +39,7 @@ function verify()
 		return;
 	}
 	
-	$.post("http://localhost:3000/verify_user",
+	$.post("http://localhost:3000/user/verify_user",
 		{
 			user_id: user_id,
 			user_password: $('#user_verify_pwd').val(),
@@ -125,7 +125,7 @@ function submit_form()
 	
 	if($('#user_pwd').val() == $('#user_re_pwd').val())
 	{
-		$.post("http://localhost:3000/update_pwd",
+		$.post("http://localhost:3000/user/update_pwd",
 			{
 				user_id: $('#user_email').val(),
 				user_password: $('#user_pwd').val(),
