@@ -1,6 +1,7 @@
 const express = require('express');
 let router = express.Router();
 var UserController = require('../controllers/user.controller')
+var TodoController = require('../controllers/todo.controller')
 
 /***************************Signup Routing**********************************/
 	
@@ -12,23 +13,23 @@ router.post('/login', UserController.login)
 
 /***************************Fetch TODO list Routing**********************************/
 
-router.post('/fetch_todo', UserController.fetch_todo)
+router.post('/fetch_todo', TodoController.fetch_todo)
 
 /***************************Insert TODO data Routing**********************************/
 
-router.post('/insert_todo', UserController.insert_todo)
+router.post('/insert_todo', TodoController.insert_todo)
 
 /***************************Delete TODO data Routing**********************************/
 
-router.post('/delete_todo', UserController.delete_todo)
+router.post('/delete_todo', TodoController.delete_todo)
 
 /***************************Update TODO data Routing**********************************/
 
-router.post('/update_todo', UserController.update_todo)
+router.post('/update_todo', TodoController.update_todo)
 
 /***************************Restore deleted TODO data Routing**********************************/
 
-router.post('/restore_todo', UserController.restore_todo)
+router.post('/restore_todo', TodoController.restore_todo)
 
 /***************************User Verfication Routing to update the password**********************************/
 

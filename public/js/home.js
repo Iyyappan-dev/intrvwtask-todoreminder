@@ -40,6 +40,7 @@ function fetch_todo_data()
 				for(var i=0;i<data.length;i++)
 				{
 					// var expiry_date = new Date(data[i].expiry_date);
+					console.log(expiry_date >= today_date);
 					var expiry_date = data[i].expiry_date.split('/');
 					expiry_date = new Date(expiry_date[1]+'/'+expiry_date[0]+'/'+expiry_date[2]);
 					if(expiry_date >= today_date && data[i].trash_data == 'N')
