@@ -183,24 +183,44 @@ exports.update_pwd = async function (query, req, res) {
 exports.forgot_password = async function (query, req, res) {
 	var user_id=req.body.user_id;
 	
-	var mailOptions={
-		to : user_id,
-		from: 'no-reply@gmail.com',
-		subject: 'Forgot Password',
-		html: 'Dear User,<br>Click the below link to reset the password<br><a href="http://localhost:3000/reset_password?user_id='+ user_id +'">Reset Password</a>',				
-	}
-	console.log(mailOptions);
-	transporter.sendMail(mailOptions, function(error, resp)
-	{
-		if(error)
-		{
-			console.log('Email error: ' + error);
-			res.sendStatus(500);
+	mongoose.models = {}
+	const signUp = mongoose.model('login_data', {
+		user_id: { type: String },
+		user_password: { type: String }
+	}, 'login_user');
+
+	signUp.find({ user_id: user_id}, function (err, result) {
+		if (err){
+			console.log(err);
 		}
-		else
-		{
-			console.log("Email Success");
-			res.sendStatus(200);
+		else{
+			if(result.length > 0)
+			{
+				var mailOptions={
+					to : user_id,
+					from: 'no-reply@gmail.com',
+					subject: 'Forgot Password',
+					html: 'Dear User,<br>Click the below link to reset the password<br><a href="http://localhost:3000/reset_password?user_id='+ user_id +'">Reset Password</a>',				
+				}
+				console.log(mailOptions);
+				transporter.sendMail(mailOptions, function(error, resp)
+				{
+					if(error)
+					{
+						console.log('Email error: ' + error);
+						res.sendStatus(500);
+					}
+					else
+					{
+						console.log("Email Success");
+						res.sendStatus(200);
+					}
+				})
+			}
+			else
+			{
+				res.sendStatus(501);
+			}
 		}
 	})
 }
