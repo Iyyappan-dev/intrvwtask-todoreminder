@@ -11,8 +11,8 @@ const nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
-		user: "ayyappaniyyappan75@gmail.com",
-		pass: "7871433886!"
+		user: "Your email id",
+		pass: "Your pwd"
 	}
 });
 /***************************JWT Token Generator**********************************/
